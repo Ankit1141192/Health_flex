@@ -50,7 +50,12 @@ export default function App() {
         <Drawer.Screen
           name="HomeTabs"
           component={MyTabs}
-          options={{ title: 'Home' }}
+          options={{ title: 'StopWatch' }}
+        />
+        <Drawer.Screen
+          name="HistoryTabs"
+          component={HistoryScreen}
+          options={{ title: 'History' }}
         />
         <Drawer.Screen name="Settings" component={SettingsScreen} />
       </Drawer.Navigator>
