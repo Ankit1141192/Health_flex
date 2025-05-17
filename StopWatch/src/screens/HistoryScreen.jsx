@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View,SafeAreaView, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -49,9 +49,13 @@ const HistoryScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Completed Timers</Text>
+        <View style={styles.headerLeft}>
+          <Ionicons name="time-outline" size={25} color="#555" style={styles.icons}/>
+          <Text style={styles.title}> Recent</Text>
+        </View>
+        
         <Pressable onPress={clearData} style={styles.clearButton}>
           <Ionicons name="trash-outline" size={20} color="#d00" />
           <Text style={styles.clearText}> Clear Data</Text>
@@ -68,7 +72,7 @@ const HistoryScreen = () => {
           contentContainerStyle={{ paddingBottom: 24 }}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -85,6 +89,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+  },
+  headerLeft:{
+    flexDirection: 'row',
+    backgroundColor:"#0003",
+    borderRadius:10,
+    padding:7,
+    gap:2,
+  },
+  icons:{
+    position:"relative",
+    top:3,
   },
   title: {
     fontSize: 24,

@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import {View, Text,SafeAreaView, TextInput, Pressable, StyleSheet,Alert,} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,7 +9,9 @@ const HomeScreen = () => {
   const [category, setCategory] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [halfAlertShown, setHalfAlertShown] = useState(false);
   const intervalRef = useRef(null);
+  const originalDurationRef = useRef(0);
 
   useEffect(() => {
     const loadData = async () => {
@@ -28,7 +23,10 @@ const HomeScreen = () => {
       if (storedDuration) {
         setDuration(storedDuration);
         const seconds = parseInt(storedDuration);
-        if (!isNaN(seconds)) setTimeLeft(seconds);
+        if (!isNaN(seconds)) {
+          setTimeLeft(seconds);
+          originalDurationRef.current = seconds;
+        }
       }
       if (storedCategory) setCategory(storedCategory);
     };
@@ -56,6 +54,13 @@ const HomeScreen = () => {
 
     intervalRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
+        const halfTime = Math.floor(originalDurationRef.current / 2);
+
+        if (!halfAlertShown && prevTime === halfTime) {
+          setHalfAlertShown(true);
+          Alert.alert('Halfway there!', `You're halfway through the ${category} task, ${name}!`);
+        }
+
         if (prevTime <= 1) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -66,6 +71,7 @@ const HomeScreen = () => {
           );
           return 0;
         }
+
         return prevTime - 1;
       });
     }, 1000);
@@ -80,7 +86,10 @@ const HomeScreen = () => {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     const seconds = parseInt(duration);
-    if (!isNaN(seconds)) setTimeLeft(seconds);
+    if (!isNaN(seconds)) {
+      setTimeLeft(seconds);
+      setHalfAlertShown(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -100,6 +109,8 @@ const HomeScreen = () => {
     await AsyncStorage.setItem('category', category);
 
     setTimeLeft(seconds);
+    originalDurationRef.current = seconds;
+    setHalfAlertShown(false);
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     setIsEditMode(false);
@@ -112,13 +123,13 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {!isEditMode && (
         <Pressable
           style={styles.settingsIcon}
           onPress={() => setIsEditMode(true)}
         >
-          <Ionicons name="create-outline" size={28} color="#333" />
+          <Ionicons name="settings-outline" size={28} color="#333" />
         </Pressable>
       )}
 
@@ -153,8 +164,9 @@ const HomeScreen = () => {
         </>
       ) : (
         <>
-          <Text style={styles.text}>StopWatch App</Text>
-          <Text style={styles.timeText}>{formatTime(timeLeft)}</Text>
+          <View style={styles.timerContainer}>
+            <Text style={styles.timeText}>{formatTime(timeLeft)}</Text>
+          </View>
 
           <View style={styles.buttonContainer}>
             <Pressable
@@ -176,6 +188,7 @@ const HomeScreen = () => {
               <Text style={styles.buttonText}>Reset</Text>
             </Pressable>
           </View>
+
           <View style={styles.dataContainer}>
             <Text style={styles.label}>Name: <Text style={styles.value}>{name}</Text></Text>
             <Text style={styles.label}>Category: <Text style={styles.value}>{category}</Text></Text>
@@ -183,7 +196,7 @@ const HomeScreen = () => {
           </View>
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -210,8 +223,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   submitButton: {
-    backgroundColor: '#28a745',
-    borderRadius: 8,
+    backgroundColor: '#0003',
+    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 24,
     marginTop: 12,
@@ -222,30 +235,34 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#0003',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     marginHorizontal: 4,
     width: 100,
     alignItems: 'center',
   },
   buttonPressed: {
     opacity: 0.8,
+    backgroundColor: '#0000',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 48,
+    position: 'absolute',
+    top: 50,
+    left: 60,
+    fontSize: 35,
     marginVertical: 24,
     fontWeight: 'bold',
-    color: '#222',
+    color: '#700',
   },
   dataContainer: {
     alignItems: 'flex-start',
-    marginTop:20,
+    marginTop: 20,
     width: '100%',
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -270,13 +287,24 @@ const styles = StyleSheet.create({
   },
   settingsIcon: {
     position: 'absolute',
-    top: 330,
+    top: 30,
     right: 20,
     zIndex: 10,
   },
-  text:{
+  text: {
     fontSize: 25,
     color: '#666',
-    fontWeight:"bold"
-  }
+    fontWeight: 'bold',
+  },
+  timerContainer: {
+    width: '70%',
+    backgroundColor: '#ffe',
+    borderRadius: 9999,
+    height: 220,
+    shadowColor: '#000',
+    shadowOpacity: 0.02,
+    shadowRadius: 6,
+    elevation: 1,
+    marginBottom: 20,
+  },
 });
