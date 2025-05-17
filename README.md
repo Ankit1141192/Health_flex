@@ -42,7 +42,8 @@ npx expo run:android
 
 | Home Screen | Timer Running | Timer Completed | History |
 |-------------|----------------|------------------|---------|
-| ![stopWatch1](https://github.com/user-attachments/assets/cb1e8426-23a0-421f-818e-19d7e0ebfc97) | ![StopWatch2](https://github.com/user-attachments/assets/55dc035e-67cb-4139-b0c2-185679ef72e0) | ![StopWatch3](https://github.com/user-attachments/assets/0a13b175-5df6-4896-9fee-068971459ed2) | ![StopWach4](https://github.com/user-attachments/assets/52749ade-1099-4bf2-b996-f047cf7958e0) |
+| ![stopWatch1](https://github.com/user-attachments/assets/95d97a84-4ec2-46e9-a180-4085d2d11d00)| ![StopWatch2](https://github.com/user-attachments/assets/deff9102-6236-416b-9c8b-77397bba22b0)| ![StopWatch3](https://github.com/user-attachments/assets/ab94df43-7232-4688-b04c-fde26b09d575)| ![StopWach4](https://github.com/user-attachments/assets/e153c02c-5929-4f95-9c3d-de5105f42180)
+ |
 
 ---
 
